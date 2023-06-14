@@ -1,0 +1,52 @@
+function shouldPush(eventNote):Bool{
+	return true;
+}
+
+function getOffset(eventNote):Float{
+	return 0;
+}
+
+function onTrigger(value1)
+{
+	if (Std.string(value1) != "")
+	{	
+		var camDad = PlayState.getCharacterCamera(game.dad);
+		var camBf = PlayState.getCharacterCamera(game.boyfriend);
+		
+		var dadX = camDad[0];
+		var dadY = camDad[1];
+		
+		var bfX = camBf[0];
+		var bfY = camBf[1];
+		
+		var minX;
+		var minY;
+		var maxX;
+		var maxY;
+		
+		if (dadX < bfX){
+			minX = dadX;
+			maxX = bfX;
+			
+			minY = dadY;
+			maxY = bfY;
+		}else{
+			maxX = dadX;
+			minX = bfX;
+			
+			maxY = dadY;
+			minY = bfY;
+		}
+		
+		var sowy = Std.parseFloat(value1);
+		game.triggerEventNote(
+			"Camera Follow Pos",
+			Std.string(FlxMath.lerp(minX, maxX, sowy)), 
+			Std.string(FlxMath.lerp(minY, maxY, sowy))
+		);
+	}
+	else
+	{
+		game.triggerEventNote("Camera Follow Pos", "", "");
+	}
+}

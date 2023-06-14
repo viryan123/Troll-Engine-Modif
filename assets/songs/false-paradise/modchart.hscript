@@ -1,0 +1,37 @@
+importClass("openfl.filters.ShaderFilter");
+importClass("Shaders");
+
+function onCountdownStarted(){
+    if (disableModcharts) getInstance().saveScore = false;
+}
+
+var vhs;
+
+function onCreatePost()
+{
+	vhs = new VhsEffect();
+	var filter:ShaderFilter = new ShaderFilter(vhs.shader);
+	//game.camGame.setFilters([filter]);
+}
+
+function update(elapsed)
+{
+    vhs.update(elapsed);
+    
+    onDestroy = removevhsShader;
+    onGameOver = removevhsShader;
+}
+
+
+function removevhsShader()
+{
+	if (vhs != null){
+		if (script.get("game") == null){
+			getInstance().camGame.setFilters([]);
+			return;
+		}
+	
+		game.camGame.setFilters([]);
+		game.camHUD.setFilters([]);
+	}
+}
