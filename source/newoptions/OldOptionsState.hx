@@ -504,7 +504,7 @@ class OptionsState extends MusicBeatState {
 		add(currentGroup);
 
 		optionDesc = new FlxText(5, FlxG.height - 48, 0, "", 20);
-		optionDesc.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		optionDesc.setFormat(Paths.font('Normal Text.ttf'), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		optionDesc.textField.background = true;
 		optionDesc.textField.backgroundColor = FlxColor.BLACK;
 		optionDesc.screenCenter(XY);

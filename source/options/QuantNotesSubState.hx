@@ -162,7 +162,7 @@ class QuantNotesSubState extends MusicBeatSubstate
 		add(hsbText);
 
 		presetsText = new FlxText(10, FlxG.height - 120, 200, "Press ALT for presets", 20);
-		presetsText.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		presetsText.setFormat(Paths.font('Normal Text.ttf'), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		presetsText.scrollFactor.set(0, 0);
 		presetsText.active = false;
 		add(presetsText);

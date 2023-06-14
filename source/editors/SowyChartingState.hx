@@ -728,7 +728,7 @@ class SowyChartingState extends MusicBeatState
 
 		var newText = notetypeTextGroup.recycle(FlxText, ()->{
 			var daText = new FlxText(0, 0, 100, "123");
-			daText.setFormat(Paths.font("vcr.ttf"), 24, 0xFFFFFFFF, CENTER, FlxTextBorderStyle.OUTLINE, 0xFF000000);
+			daText.setFormat(Paths.font('Normal Text.ttf'), 24, 0xFFFFFFFF, CENTER, FlxTextBorderStyle.OUTLINE, 0xFF000000);
 			daText.borderSize = 1;
 			daText.camera = sectionCamera;
 			return daText;
