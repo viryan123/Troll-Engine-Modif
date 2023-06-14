@@ -481,7 +481,7 @@ class OptionsSubstate extends MusicBeatSubstate
 			button.alpha = 0.75;
 
 			var text = new FlxText(button.x, button.y, 0, name.toUpperCase(), 16);
-			text.setFormat(Paths.font("calibrib.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
+			text.setFormat(Paths.font("Bold Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
 			var width = text.fieldWidth < 86 ? 86 : text.fieldWidth;
 			button.setGraphicSize(Std.int(width + 8), Std.int(button.height));
 			button.updateHitbox();
@@ -509,7 +509,7 @@ class OptionsSubstate extends MusicBeatSubstate
 				var label = data[0];
 				var daOpts:Array<String> = data[1];
 				var text = new FlxText(8, daY, 0, label, 16);
-				text.setFormat(Paths.font("calibrib.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				text.setFormat(Paths.font("Bold Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.LEFT);
 				text.cameras = [optionCamera];
 				group.add(text);
 				daY += text.height;
@@ -521,7 +521,7 @@ class OptionsSubstate extends MusicBeatSubstate
 					data.data.set("optionName", opt);
 					var text = new FlxText(16, daY, 0, data.display, 16);
 					text.cameras = [optionCamera];
-					text.setFormat(Paths.font("calibri.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
+					text.setFormat(Paths.font("Normal Text.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
 					var height = text.height + 12;
 					if (height < 45)
 						height = 45;
@@ -570,7 +570,7 @@ class OptionsSubstate extends MusicBeatSubstate
 		add(currentGroup);
 
 		optionDesc = new FlxText(5, FlxG.height - 48, 0, "", 20);
-		optionDesc.setFormat(Paths.font("calibri.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		optionDesc.setFormat(Paths.font("Normal Text.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		optionDesc.textField.background = true;
 		optionDesc.textField.backgroundColor = FlxColor.BLACK;
 		optionDesc.screenCenter(XY);
@@ -601,7 +601,7 @@ class OptionsSubstate extends MusicBeatSubstate
 				checkbox.scale.set(0.65, 0.65);
 				checkbox.updateHitbox();
 				var text = new FlxText(0, 0, 0, "off", 16);
-				text.setFormat(Paths.font("calibri.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				text.setFormat(Paths.font("Normal Text.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
 				// trace(data.value);
 				checkbox.toggled = data.value != null ? cast data.value : false;
 
@@ -637,14 +637,14 @@ class OptionsSubstate extends MusicBeatSubstate
 					dV = options[0];
 
 				var label = new FlxText(0, 0, 0, dV, 16);
-				label.setFormat(Paths.font("calibri.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				label.setFormat(Paths.font("Normal Text.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
 
 				for (idx in 0...options.length)
 				{
 					var l = options[idx];
 					var text = new FlxText(8 + 4, daY + 4, 0, l, 16);
 					text.cameras = [daCamera];
-					text.setFormat(Paths.font("calibri.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
+					text.setFormat(Paths.font("Normal Text.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
 					var height = 35;
 					var width = text.width + 8;
 					if (width < 50)
@@ -727,7 +727,7 @@ class OptionsSubstate extends MusicBeatSubstate
 				objects.add(bar);
 
 				var text = new FlxText(0, 0, 0, "off", 16);
-				text.setFormat(Paths.font("calibri.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				text.setFormat(Paths.font("Normal Text.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.LEFT);
 				objects.add(text);
 
 				var leftAdjust = new WidgetButton();

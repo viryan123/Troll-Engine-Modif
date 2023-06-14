@@ -116,11 +116,11 @@ class NewBindsSubstate extends MusicBeatSubstate  {
 		popupDrop.screenCenter(XY);
 
 		popupTitle = new FlxText(popupDrop.x, popupDrop.y + 10, popupDrop.width, "Currently binding my penis", 16);
-		popupTitle.setFormat(Paths.font("calibrib.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
+		popupTitle.setFormat(Paths.font("Bold Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
 		popupText = new FlxText(popupDrop.x, popupDrop.y + popupTitle.height, popupDrop.width, "Press key to bind\npress to unbind", 16);
-		popupText.setFormat(Paths.font("calibri.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
+		popupText.setFormat(Paths.font("Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
 		unbindText = new FlxText(popupDrop.x, popupDrop.y + 180, popupDrop.width, "(Note that this action needs atleast one key bound)", 16);
-		unbindText.setFormat(Paths.font("calibri.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
+		unbindText.setFormat(Paths.font("Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.CENTER);
 
 		unbindText.cameras = [overCam];
 		popupText.cameras = [overCam];
@@ -168,7 +168,7 @@ class NewBindsSubstate extends MusicBeatSubstate  {
                 
 				var text = new FlxText(16, daY, 0, label, 16);
 				text.cameras = [scrollableCam];
-				text.setFormat(Paths.font("calibri.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				text.setFormat(Paths.font("Normal Text.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
 				text.updateHitbox();
 				var height = text.height + 12;
 				if (height < 45)
@@ -204,7 +204,7 @@ class NewBindsSubstate extends MusicBeatSubstate  {
                 // its just a label
 				var text = new FlxText(8, daY, 0, label, 16);
 				text.cameras = [scrollableCam];
-				text.setFormat(Paths.font("calibrib.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.LEFT);
+				text.setFormat(Paths.font("Bold Normal Text.ttf"), 32, 0xFFFFFFFF, FlxTextAlign.LEFT);
 				group.add(text);
 				daY += text.height;
             }
@@ -214,7 +214,7 @@ class NewBindsSubstate extends MusicBeatSubstate  {
 
 		var text = new FlxText(16, daY, 0, "Reset to Defaults", 16);
 		text.cameras = [scrollableCam];
-		text.setFormat(Paths.font("calibri.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
+		text.setFormat(Paths.font("Normal Text.ttf"), 28, 0xFFFFFFFF, FlxTextAlign.LEFT);
 		text.updateHitbox();
 		var height = text.height + 12;
 		if (height < 45)
@@ -383,7 +383,7 @@ class BindButton extends FlxUI9SliceSprite
 		super(x, y, Paths.image("optionsMenu/backdrop"), rect, [22, 22, 89, 89]);
 
 		textObject = new FlxText(x, y, 0, InputFormatter.getKeyName(bind), 16);
-		textObject.setFormat(Paths.font("calibri.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.CENTER);
+		textObject.setFormat(Paths.font("Normal Text.ttf"), 24, 0xFFFFFFFF, FlxTextAlign.CENTER);
 		textObject.updateHitbox();
 		textObject.y += (height - textObject.height) / 2;
         this.bind = bind;

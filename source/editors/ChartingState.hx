@@ -995,7 +995,7 @@ class ChartingState extends MusicBeatState
 
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
-		tab_group_note.add(check_isRoll);
+		//tab_group_note.add(check_isRoll);
 		tab_group_note.add(noteSkinInputTextbf);
 		tab_group_note.add(noteSkinInputTextdad);
 		tab_group_note.add(noteTypeDropDown);
