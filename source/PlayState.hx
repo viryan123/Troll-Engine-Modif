@@ -607,7 +607,7 @@ class PlayState extends MusicBeatState
 		splashSkin = SONG.splashSkin;
 
 		if (arrowSkin == null || arrowSkin.trim().length == 0)
-			arrowSkin = "noteSkin/NOTE_assets";
+			arrowSkin = "NOTE_assets";
 
 		if (splashSkin == null || splashSkin.trim().length == 0)
 			splashSkin = "noteSplash/noteSplash";
@@ -659,8 +659,8 @@ class PlayState extends MusicBeatState
 
 		////
 		if (ClientPrefs.noteSkin == 'Quants'){
-			shitToLoad.push({path: 'QUANT$arrowSkin'});
-			shitToLoad.push({path: 'QUANT$splashSkin'});
+			shitToLoad.push({path: 'noteSkin/QUANT$arrowSkin'});
+			shitToLoad.push({path: 'noteSkin/QUANT$splashSkin'});
 		}else{
 			shitToLoad.push({path: arrowSkin});
 			shitToLoad.push({path: splashSkin});
