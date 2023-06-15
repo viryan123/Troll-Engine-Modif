@@ -57,7 +57,6 @@ class FreeplayState extends MusicBeatState
 	override function create()
 	{
 		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
@@ -173,6 +172,8 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		add(text);
 		super.create();
+
+		Paths.clearUnusedMemory();
 	}
 
 	override function closeSubState()
@@ -544,7 +545,6 @@ class FreeplaySelectState extends MusicBeatState
 	override function create()
 	{
 		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		FlxG.mouse.visible = true;
 
 		BG = new FlxSprite().loadGraphic(Paths.image('menuBGDesat'));
@@ -563,6 +563,7 @@ class FreeplaySelectState extends MusicBeatState
 		}
 		changeSelection();
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	override public function update(elapsed:Float)

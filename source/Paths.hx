@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxDestroyUtil;
 import openfl.media.Sound;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -10,6 +11,7 @@ import openfl.geom.Rectangle;
 import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as Assets;
+import openfl.utils.Assets as OpenFlAssets;
 import haxe.CallStack;
 
 using StringTools;
@@ -59,9 +61,27 @@ class Paths
 				@:privateAccess
 				if (obj != null)
 				{
+					obj.persist = false;
+					obj.destroyOnNoUse = true;
+					OpenFlAssets.cache.removeBitmapData(key);
+
 					Assets.cache.removeBitmapData(key);
 					FlxG.bitmap._cache.remove(key);
+
+					if (obj.bitmap.__texture != null)
+					{
+						obj.bitmap.__texture.dispose();
+						obj.bitmap.__texture = null;
+					}
+					FlxG.bitmap.remove(obj);
+
+					obj.dump();
+					obj.bitmap.disposeImage();
+					FlxDestroyUtil.dispose(obj.bitmap);
+
+					obj.bitmap = null;
 					obj.destroy();
+					obj = null;
 					currentTrackedAssets.remove(key);
 
 					// trace('cleared $key');
@@ -98,9 +118,28 @@ class Paths
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !currentTrackedAssets.exists(key))
 			{
+				obj.persist = false;
+				obj.destroyOnNoUse = true;
+
 				Assets.cache.removeBitmapData(key);
 				FlxG.bitmap._cache.remove(key);
+				FlxG.bitmap.removeByKey(key);
+				if (obj.bitmap.__texture != null)
+				{
+					obj.bitmap.__texture.dispose();
+					obj.bitmap.__texture = null;
+				}
+	
+				FlxG.bitmap.remove(obj);
+	
+				obj.dump();
+	
+				obj.bitmap.disposeImage();
+				FlxDestroyUtil.dispose(obj.bitmap);
+				obj.bitmap = null;
+	
 				obj.destroy();
+				obj = null;
 			}
 		}
 
@@ -117,6 +156,8 @@ class Paths
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		Assets.cache.clear("songs");
+
+		System.gc();
 	}
 
 	static public var currentModAddons:Array<String> = [];

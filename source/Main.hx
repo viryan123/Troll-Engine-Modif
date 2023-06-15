@@ -133,6 +133,12 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, #if(flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash, startFullscreen));
 
+		FlxG.signals.postStateSwitch.add(function()
+		{
+			cpp.vm.Gc.run(false);
+			cpp.vm.Gc.compact();
+		});
+
 		FlxG.sound.muteKeys = StartupState.muteKeys;
 		FlxG.sound.volumeDownKeys = StartupState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = StartupState.volumeUpKeys;

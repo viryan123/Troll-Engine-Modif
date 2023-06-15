@@ -213,8 +213,16 @@ class ChartingState extends MusicBeatState
 	var text:String = "";
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
+	public static var mustCleanMem:Bool = false;
 	override function create()
 	{
+		if (mustCleanMem)
+		{
+			Paths.clearStoredMemory();
+			Paths.clearUnusedMemory();
+			mustCleanMem = false;
+		}
+
 		instance = this;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
@@ -2953,6 +2961,7 @@ class ChartingState extends MusicBeatState
 			openSubState(new Prompt('An error ocurred while loading the JSON file', 0, null, null, false, "OK", "OK"));
 		}else{
 			PlayState.SONG = daJson;
+			mustCleanMem = true;
 			MusicBeatState.resetState();
 		}
 	}
