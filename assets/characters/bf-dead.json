@@ -1,37 +1,37 @@
 {
 	"animations": [
 		{
-			"loop": true,
 			"offsets": [
-				172,
-				-23
+				37,
+				11
 			],
-			"anim": "deathLoop",
-			"fps": 24,
-			"name": "game over loop",
-			"indices": []
-		},
-		{
 			"loop": false,
-			"offsets": [
-				172,
-				176
-			],
+			"fps": 24,
 			"anim": "firstDeath",
-			"fps": 24,
-			"name": "game over start",
-			"indices": []
+			"indices": [],
+			"name": "BF dies"
 		},
 		{
-			"loop": false,
 			"offsets": [
-				172,
-				45
+				37,
+				5
 			],
-			"anim": "deathConfirm",
+			"loop": true,
 			"fps": 24,
-			"name": "game over end",
-			"indices": []
+			"anim": "deathLoop",
+			"indices": [],
+			"name": "BF Dead Loop"
+		},
+		{
+			"offsets": [
+				37,
+				69
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "deathConfirm",
+			"indices": [],
+			"name": "BF Dead confirm"
 		}
 	],
 	"no_antialiasing": false,
@@ -40,15 +40,15 @@
 		0,
 		350
 	],
-	"healthicon": "hev-bf",
+	"healthicon": "bf",
 	"flip_x": true,
 	"healthbar_colors": [
-		0,
-		255,
-		255
+		49,
+		176,
+		209
 	],
 	"camera_position": [
-		360,
+		0,
 		0
 	],
 	"sing_duration": 4,

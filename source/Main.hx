@@ -125,34 +125,12 @@ class Main extends Sprite
 		////
 		ClientPrefs.loadDefaultKeys();
 
-		var troll = false;
-		#if sys
-		for (arg in Sys.args()){
-			switch(arg){
-				case "troll":
-					troll = true;
-					break;
-				
-				//case "debug":
-				//	PlayState.chartingMode = true;
-				//	initialState = SongSelectState;
-				
-				case "showdebugtraces":
-					Main.showDebugTraces = true;
-			}
-		}
-		#end
+		@:privateAccess
+		FlxG.initSave();
 
-		if (troll){
-			initialState = SinnerState;
-			skipSplash = true;
-		}else{
-			@:privateAccess
-			FlxG.initSave();
+		if (FlxG.save.data != null && FlxG.save.data.fullscreen != null)
+			startFullscreen = FlxG.save.data.fullscreen;
 
-			if (FlxG.save.data != null && FlxG.save.data.fullscreen != null)
-				startFullscreen = FlxG.save.data.fullscreen;
-		}
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, #if(flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash, startFullscreen));
 
 		FlxG.sound.muteKeys = StartupState.muteKeys;

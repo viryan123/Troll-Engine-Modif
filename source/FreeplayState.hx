@@ -327,8 +327,7 @@ class FreeplayState extends MusicBeatState
 		}
 		
 		for (item in grpSongs.members)
-			if (accepted || (((FlxG.mouse.overlaps(item) && item.targetY == 0) || (FlxG.mouse.overlaps(iconArray[curSelected])))
-				&& FlxG.mouse.pressed))
+			if (accepted || FlxG.mouse.pressed)
 			{
 				persistentUpdate = false;
 				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
@@ -604,8 +603,7 @@ class FreeplaySelectState extends MusicBeatState
 			backOut();
 		}
 		for (item in grpCats)
-		if (controls.ACCEPT || (((FlxG.mouse.overlaps(item) && item.targetY == 0))
-			&& FlxG.mouse.pressed))
+		if (controls.ACCEPT || FlxG.mouse.pressed)
 		{
 			FreeplayState.freeplayType = curSelected;
 			FlxG.switchState(new FreeplayState());

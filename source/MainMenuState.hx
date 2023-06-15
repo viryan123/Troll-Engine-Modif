@@ -230,11 +230,11 @@ class MainMenuState extends MusicBeatState
 				changeItem(1);
 			}
 
-			if (controls.BACK)
+			/*if (controls.BACK)
 			{
 				selectedSomethin = true;
 				MusicBeatState.switchState(new TitleState());
-			}
+			}*/
 
 			if (controls.ACCEPT || (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.pressed))
 			{
