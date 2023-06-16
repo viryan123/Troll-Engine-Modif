@@ -930,12 +930,7 @@ class PlayState extends MusicBeatState
 		
 		hud.songName = SONG.song;
 		hud.alpha = ClientPrefs.hudOpacity;
-		
-		/* This appears above the strumlines despite being added before them?
-		var sowy = new FlxSprite().makeGraphic(300, 300);
-		sowy.cameras = [camHUD];
-		add(sowy);
-		*/
+
 		add(hud);
 
 		//
@@ -2550,7 +2545,7 @@ class PlayState extends MusicBeatState
 
 	function resyncVocals():Void
 	{
-		if(finishTimer != null || transitioning)
+		if(finishTimer != null || transitioning || !SONG.needsVoices)
 			return;
 
 		vocals.pause();
