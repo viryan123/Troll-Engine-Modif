@@ -1766,7 +1766,7 @@ class FunkinLua extends FunkinScript
 			#end
 		});
 
-		Lua_helper.add_callback(lua, "startMidSongVideo", function(videoFile:String, pauseMusic:Bool) {
+		Lua_helper.add_callback(lua, "startMidSongVideo", function(videoFile:String, pauseMusic:Bool = false) {
 			#if VIDEOS_ALLOWED
 			if(FileSystem.exists(Paths.video(videoFile))) {
 				PlayState.instance.startMidSongVideo(videoFile,pauseMusic);

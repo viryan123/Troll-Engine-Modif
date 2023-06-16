@@ -22,6 +22,15 @@ function update(elapsed)
     onGameOver = removevhsShader;
 }
 
+function onSongStart()
+{
+	/*
+		VideoSource
+		Pause Video Music
+	*/
+	//game.startMidSongVideo('Test',false);
+}
+
 
 function removevhsShader()
 {

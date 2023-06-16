@@ -252,6 +252,11 @@ class PlayState extends MusicBeatState
 
 	public var eventNotes:Array<EventNote> = [];
 
+	// MP4 vids var
+	#if (VIDEOS_ALLOWED)
+	public var videoSprite:VideoSprite;
+	#end
+
 	public var strumLineNotes = new FlxTypedGroup<StrumNote>();
 	public var opponentStrums = new FlxTypedGroup<StrumNote>();
 	public var playerStrums = new FlxTypedGroup<StrumNote>();
@@ -291,12 +296,11 @@ class PlayState extends MusicBeatState
 		return value;
 	}
 	public var health(default, set):Float = 1;
+	public var maxHealth:Float = 2;
 	function set_health(value:Float){
-		health = value > 2 ? 2 : value;
+		health = value > maxHealth ? maxHealth : value;
 
 		displayedHealth = health;
-
-		doDeathCheck(value < health);
 
 		return health;
 	}
@@ -359,6 +363,7 @@ class PlayState extends MusicBeatState
 	var songPercent:Float = 0;
 
 	public var camGame:FlxCamera;
+	public var camVideo:FlxCamera;
 	public var camSubs:FlxCamera; // JUST for subtitles
 	public var camStageUnderlay:FlxCamera; // retarded
 	public var camHUD:FlxCamera;
@@ -544,6 +549,7 @@ class PlayState extends MusicBeatState
 
 		//// Camera shit
 		camGame = new FlxCamera();
+		camVideo = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOverlay = new FlxCamera();
 		camOther = new FlxCamera();
@@ -552,12 +558,15 @@ class PlayState extends MusicBeatState
 
 		camSubs.bgColor.alpha = 0;
 		camStageUnderlay.bgColor.alpha = 0; 
+		camVideo.bgColor.alpha = 0;
 		camHUD.bgColor.alpha = 0; 
 		camOverlay.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camStageUnderlay, false);
+		// Video Camera if you put funni videos or smth
+		FlxG.cameras.add(camVideo, false);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOverlay, false);
 		FlxG.cameras.add(camSubs, false);
@@ -1082,7 +1091,8 @@ class PlayState extends MusicBeatState
 			add(subtitles);
 			subtitles.y = 550;
 			subtitles.cameras = [camSubs];
-		}
+		}else if(showDebugTraces)
+		trace(SONG.song + " doesnt have subtitles!");
 
 		noteTypeMap.clear();
 		noteTypeMap = null;
@@ -1276,8 +1286,6 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	var videoSprite:VideoSprite;
-
 	public function startMidSongVideo(name:String,pauseMusic:Bool)
 	{
 		#if VIDEOS_ALLOWED
@@ -1295,32 +1303,30 @@ class PlayState extends MusicBeatState
 
 		if (ClientPrefs.bgvid)
 		{
-				var appliedWidth:Float = Lib.current.stage.stageHeight * (FlxG.width / FlxG.height);
-				var appliedHeight:Float = Lib.current.stage.stageWidth * (FlxG.height / FlxG.width);
+			var appliedWidth:Float = Lib.current.stage.stageHeight * (FlxG.width / FlxG.height);
+			var appliedHeight:Float = Lib.current.stage.stageWidth * (FlxG.height / FlxG.width);
 
-				if (appliedHeight > Lib.current.stage.stageHeight)
-					appliedHeight = Lib.current.stage.stageHeight;
+			if (appliedHeight > Lib.current.stage.stageHeight)
+				appliedHeight = Lib.current.stage.stageHeight;
 
-				if (appliedWidth > Lib.current.stage.stageWidth)
-					appliedWidth = Lib.current.stage.stageWidth;
+			if (appliedWidth > Lib.current.stage.stageWidth)
+				appliedWidth = Lib.current.stage.stageWidth;
 
-				videoSprite = new VideoSprite();
-				videoSprite.cameras = [camStageUnderlay];
-				videoSprite.canvasWidth = Std.int(appliedWidth);
-				videoSprite.canvasHeight = Std.int(appliedHeight);
-				videoSprite.bitmap.canSkip = false;
-				add(videoSprite);
-				videoSprite.playVideo(filepath, true, pauseMusic);
-				videoSprite.finishCallback = function()
-				{
-					remove(videoSprite);
-					return;
-				}
-			}
-		else
+			videoSprite = new VideoSprite();
+			videoSprite.cameras = [camVideo];
+			videoSprite.canvasWidth = Std.int(appliedWidth);
+			videoSprite.canvasHeight = Std.int(appliedHeight);
+			videoSprite.bitmap.canSkip = false;
+			add(videoSprite);
+			videoSprite.playVideo(filepath, true, pauseMusic);
+			videoSprite.finishCallback = function()
 			{
+				remove(videoSprite);
 				return;
 			}
+		}
+		else
+			return;
 		#else
 		FlxG.log.warn('Platform not supported!');
 		return;
@@ -2357,6 +2363,14 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			#if (VIDEOS_ALLOWED)
+			if (videoSprite != null)
+			{
+				if (videoSprite.alive)
+					videoSprite.bitmap.pause();
+			}
+			#end
+
 			if (inst != null)
 			{
 				inst.pause();
@@ -2395,6 +2409,13 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			#if (VIDEOS_ALLOWED)
+			if (videoSprite != null)
+			{
+				if (videoSprite.alive)
+					videoSprite.bitmap.resume();
+			}
+			#end
 			if (inst != null && !startingSong)
 				resyncVocals();
 
@@ -2703,7 +2724,8 @@ class PlayState extends MusicBeatState
 			// RESET = Quick Game Over Screen
 			if (controls.RESET && canReset && !inCutscene && startedCountdown)
 				health = 0;
-			//	Death checks are now done after when your health is modified, rather than every frame
+
+			doDeathCheck();
 
 			if (controls.PAUSE)
 				pause();
@@ -4496,6 +4518,14 @@ class PlayState extends MusicBeatState
 			inst.fadeTween.cancel();
 		}
 		inst.fadeTween = null; */
+
+		if (videoSprite != null)
+		{
+			videoSprite.bitmap.dispose();
+			videoSprite.bitmap.stop();
+			videoSprite.destroy();
+			remove(videoSprite);
+		}
 	}
 
 	#if LUA_ALLOWED

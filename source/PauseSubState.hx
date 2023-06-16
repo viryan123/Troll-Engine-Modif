@@ -284,6 +284,14 @@ class PauseSubState extends MusicBeatSubstate
 							Paths.clearStoredMemory();
 							Paths.clearUnusedMemory();
 
+							if (PlayState.instance.videoSprite != null)
+								{
+									PlayState.instance.videoSprite.bitmap.dispose();
+									PlayState.instance.videoSprite.bitmap.stop();
+									PlayState.instance.videoSprite.destroy();
+									PlayState.instance.remove(PlayState.instance.videoSprite);
+								}						
+
 							MusicBeatState.resetState();
 						}else
 							restartSong();
@@ -339,6 +347,13 @@ class PauseSubState extends MusicBeatSubstate
 		PlayState.instance.paused = true; // For lua
 		FlxG.sound.music.volume = 0;
 		PlayState.instance.vocals.volume = 0;
+		if (PlayState.instance.videoSprite != null)
+		{
+			PlayState.instance.videoSprite.bitmap.dispose();
+			PlayState.instance.videoSprite.bitmap.stop();
+			PlayState.instance.videoSprite.destroy();
+			PlayState.instance.remove(PlayState.instance.videoSprite);
+		}
 
 		if(noTrans)
 		{
