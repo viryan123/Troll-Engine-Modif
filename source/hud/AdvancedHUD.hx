@@ -251,14 +251,6 @@ class AdvancedHUD extends BaseHUD
 		songPosBar.visible = updateTime;
 		bar.visible = updateTime;
 
-		// if (ClientPrefs.timeBarType == 'Song Name')
-		// {
-		// 	timeTxt.text = songName;
-		// 	timeTxt.size = 24;
-		// 	timeTxt.y += 3;
-		// }
-		// else
-		// 	timeTxt.size = 32;
 		pcTxt.screenCenter(Y);
 		pcTxt.y -= 5 - (25 * (ClientPrefs.npsDisplay ? npsIdx + 1 : npsIdx));
 		if (ClientPrefs.hitbar)

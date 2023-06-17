@@ -128,15 +128,6 @@ class PsychHUD extends BaseHUD {
 		songNameTxt.visible = updateTime;
 		songPosBar.visible = updateTime;
 		bar.visible = updateTime;
-
-		/*if (ClientPrefs.timeBarType == 'Song Name')
-		{
-			timeTxt.text = songName;
-			timeTxt.size = 24;
-			timeTxt.y += 3;
-		}
-		else
-			timeTxt.size = 32;*/
 		
 
 		if (ClientPrefs.hitbar)
@@ -160,11 +151,11 @@ class PsychHUD extends BaseHUD {
 	}
 	override function update(elapsed:Float){
 		scoreTxt.text = (songHighscore != 0 && score > songHighscore ? 'Hi-score: ' : 'Score: ')
-			+ '$score | Combo Breaks: $comboBreaks | Rating: '
+			+ '$score • Combo Breaks: $comboBreaks • Rating: '
 			+ (grade != '?' ? Highscore.floorDecimal(ratingPercent * 100, 2)
 				+ '% / ${grade} [${(ratingFC == 'CFC' && ClientPrefs.wife3) ? "FC" : ratingFC}]' : grade);
 		if (ClientPrefs.npsDisplay)
-			scoreTxt.text += ' | NPS: ${nps} / ${npsPeak}';
+			scoreTxt.text += ' • NPS: ${nps} / ${npsPeak}';
 
 		for (k in judgements.keys())
 		{

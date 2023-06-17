@@ -1,0 +1,56 @@
+var gfField = newPlayField();
+var playerField = game.playerField;
+var oppField = game.dadField;
+
+function onCreatePost()
+{
+    gfField.characters = [game.gf];
+	var toMove:Array<Note> = [];
+	for(note in toMove){
+		oppField.unqueue(note);
+		gfField.queue(note);
+	}
+
+	var toMove:Array<Note> = [];
+    for(note in toMove){
+		playerField.unqueue(note);
+		oppField.queue(note);
+	}
+
+}
+
+function preModifierRegister(){
+    gfField.generateStrums('');
+	gfField.autoPlayed = true;
+	gfField.isPlayer = false;
+	gfField.noteHitCallback = game.opponentHitCallback;
+	gfField.fadeIn(true);
+
+	gfField.cameras = [game.camHUD];
+}
+
+function postModifierRegister(){
+	for(strum in gfField.strumNotes){
+		FlxTween.cancelTweensOf(strum);
+		strum.alpha = 0;
+	}
+	gfField.modNumber = 2;
+	
+	modManager.setValue("reverse", 1, 2);
+}
+
+function onEvent(name, value1, value2)
+{
+    if (name != "Song Event")
+		return;
+
+    switch (value1)
+    {
+        case "ThirdStrums":
+        	gfField.fadeIn(false);
+            // opponent mode
+			gfField.autoPlayed = oppField.autoPlayed || botPlay;
+			gfField.isPlayer = oppField.isPlayer;
+			gfField.noteHitCallback = oppField.noteHitCallback;
+    }
+}

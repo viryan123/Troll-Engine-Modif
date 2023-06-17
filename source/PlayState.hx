@@ -351,8 +351,6 @@ class PlayState extends MusicBeatState
 	public var perfectMode:Bool = false;
 	public var instaRespawn:Bool = false;
 
-	public var oppSameAsPlayer:Bool = false;
-
 	public var healthBar:FNFHealthBar;
 	public var healthBarBG:FlxSprite;
 
@@ -663,9 +661,6 @@ class PlayState extends MusicBeatState
 		*/
 		shitToLoad.push({path: "breakfast", type: 'MUSIC'}); 
 
-		if (ClientPrefs.timeBarType != 'Disabled')
-			shitToLoad.push({path: "timeBar"});
-
 		////
 		if (ClientPrefs.noteSkin == 'Quants'){
 			shitToLoad.push({path: 'noteSkin/QUANT$arrowSkin'});
@@ -891,26 +886,13 @@ class PlayState extends MusicBeatState
 		playerField.autoPlayed = !playerField.isPlayer || cpuControlled;
 		playerField.noteHitCallback = playOpponent ? opponentNoteHit : goodNoteHit;
 
-		if (oppSameAsPlayer)
-		{
-			dadField = new PlayField(modManager);
-			dadField.isPlayer = !playOpponent;
-			dadField.autoPlayed = !dadField.isPlayer || cpuControlled;
-			dadField.modNumber = 1;
-			dadField.characters = [];
-			for(n => ch in dadMap)dadField.characters.push(ch);
-			dadField.noteHitCallback = playOpponent ? opponentNoteHit : goodNoteHit;
-		}
-		else
-		{
-			dadField = new PlayField(modManager);
-			dadField.isPlayer = playOpponent;
-			dadField.autoPlayed = !dadField.isPlayer || cpuControlled;
-			dadField.modNumber = 1;
-			dadField.characters = [];
-			for(n => ch in dadMap)dadField.characters.push(ch);
-			dadField.noteHitCallback = playOpponent ? goodNoteHit : opponentNoteHit;
-		}
+		dadField = new PlayField(modManager);
+		dadField.isPlayer = playOpponent;
+		dadField.autoPlayed = !dadField.isPlayer || cpuControlled;
+		dadField.modNumber = 1;
+		dadField.characters = [];
+		for(n => ch in dadMap)dadField.characters.push(ch);
+		dadField.noteHitCallback = playOpponent ? goodNoteHit : opponentNoteHit;
 
 		dad.idleWhenHold = !dadField.isPlayer;
 		boyfriend.idleWhenHold = !playerField.isPlayer;
