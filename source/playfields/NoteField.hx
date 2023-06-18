@@ -1,6 +1,6 @@
 package playfields;
 
-import modchart.Modifier;
+import modchart.Modifier.RenderInfo;
 import flixel.math.FlxPoint;
 import openfl.geom.ColorTransform;
 import flixel.graphics.FlxGraphic;
@@ -57,7 +57,6 @@ class NoteField extends FieldBase
 		modManager.getActiveMods(d); // generate an activemods thing if needed
 		return modNumber = d;
 	}
-
 	/*
 	 * The PlayField used to determine the notes to render
 	 * Required!
@@ -82,7 +81,7 @@ class NoteField extends FieldBase
 	 * The position of every receptor for a given frame.
 	 */
 	public var strumPositions:Array<Vector3> = [];
-
+    
     /*
 	 * Used by preDraw to store RenderObjects to be drawn
     */
@@ -233,6 +232,7 @@ class NoteField extends FieldBase
 
     }
 
+	
 	override function draw()
 	{
 		if (!active || !exists || !visible)
@@ -246,7 +246,7 @@ class NoteField extends FieldBase
 		var glowR = modManager.getValue("flashR", modNumber);
 		var glowG = modManager.getValue("flashG", modNumber);
 		var glowB = modManager.getValue("flashB", modNumber);
-
+		
 		// actually draws everything
 		if (drawQueue.length > 0)
 		{
@@ -261,7 +261,6 @@ class NoteField extends FieldBase
 				var vertices = object.vertices;
 				var uvData = object.uvData;
 				var indices = new Vector<Int>(vertices.length, false, cast [for (i in 0...vertices.length) i]);
-
 				var transforms:Array<ColorTransform> = [];
 				for (n in 0... Std.int(vertices.length / 3)){
 					var glow = glows[n];
@@ -277,6 +276,7 @@ class NoteField extends FieldBase
 					transforms.push(transfarm);
 				}
 
+
 				for (camera in cameras)
 				{
 					if (camera != null && camera.canvas != null && camera.canvas.graphics != null)
@@ -285,7 +285,7 @@ class NoteField extends FieldBase
 							continue;
 						for(shit in transforms)
 							shit.alphaMultiplier *= camera.alpha;
-
+						
 						var drawItem = camera.startTrianglesBatch(graphic, shader.bitmap.filter == 4, true, null, true, shader);
 
 						drawItem.addTrianglesColorArray(vertices, indices, uvData, null, FlxPoint.weak(x, y), null, transforms);
@@ -528,6 +528,7 @@ class NoteField extends FieldBase
 
 		var alpha = info.alpha;
 		var glow = info.glow;
+
 		var quad = [
 			new Vector3(-width / 2, -height / 2, 0), // top left
 			new Vector3(width / 2, -height / 2, 0), // top right
@@ -535,7 +536,7 @@ class NoteField extends FieldBase
 			new Vector3(width / 2, height / 2, 0) // bottom right
 		];
 
-
+		
 		for (idx => vert in quad)
 		{
 			var vert = VectorHelpers.rotateV3(vert, 0, 0, FlxAngle.TO_RAD * sprite.angle);

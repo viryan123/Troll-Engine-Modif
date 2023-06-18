@@ -206,7 +206,6 @@ class Note extends NoteObject
 
 	@:isVar
 	public var isSustainEnd(get, null):Bool = false;
-	public var holdParent:Bool=false;
 
 	public function get_isSustainEnd():Bool
 	{
@@ -375,7 +374,7 @@ class Note extends NoteObject
 
 	public var style:String = '';
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?rollNote:Bool = false,?style = '', ?inEditor:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false,?style = '', ?inEditor:Bool = false)
 	{
 		super();
 
@@ -384,7 +383,6 @@ class Note extends NoteObject
 		
 		this.prevNote = prevNote;
 		this.style = style;
-		isRoll = rollNote;
 		isSustainNote = sustainNote;
 
 		if (canQuant && ClientPrefs.noteSkin == 'Quants'){
@@ -404,12 +402,6 @@ class Note extends NoteObject
 		if(!inEditor)visualTime = PlayState.instance.getNoteInitialTime(this.strumTime);
 
 		this.noteData = noteData;
-
-		var sustainType = 0;
-		if(isSustainNote){
-			sustainType=1;
-			if(isRoll)sustainType=2;
-		}
 
 		if(noteData > -1) {
 			texture = '';
@@ -440,14 +432,7 @@ class Note extends NoteObject
 			//offsetX += width* 0.5;
 			copyAngle = false;
 
-			prevNote.holdParent=true;
-			switch (sustainType)
-			{
-				case 2:
-					animation.play(colArray[noteData % 4] + 'rollend');
-				case 1:
-					animation.play(colArray[noteData % 4] + 'holdend');
-			}
+			animation.play(colArray[noteData % 4] + 'holdend');
 
 			updateHitbox();
 
@@ -458,13 +443,7 @@ class Note extends NoteObject
 
 			if (prevNote.isSustainNote)
 			{
-				switch (sustainType)
-				{
-					case 2:
-						prevNote.animation.play(colArray[prevNote.noteData % 4] + 'roll');
-					case 1:
-						prevNote.animation.play(colArray[prevNote.noteData % 4] + 'hold');
-				}
+				prevNote.animation.play(colArray[prevNote.noteData % 4] + 'hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.instance.songSpeed * 100;
 
@@ -510,7 +489,7 @@ class Note extends NoteObject
 		if(texture.length < 1) {
 			if (texture == null || texture.length < 1)
 			{
-				texture = 'QUANTNOTE_assets';
+				texture = 'NOTE_assets';
 			}
 		}
 

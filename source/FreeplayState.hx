@@ -74,6 +74,7 @@ class FreeplayState extends MusicBeatState
 			case 0:
 				addSong('Dad Battle', 1, 'dad', FlxColor.fromRGB(146, 113, 253), 'Hard');
 				addSong('False Paradise', 1, 'dad', FlxColor.fromRGB(146, 113, 253), 'Hard');
+				addSong('Prey', 1, 'dad', FlxColor.fromRGB(146, 113, 253), 'Normal');
 		}
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuBGDesat'));

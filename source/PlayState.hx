@@ -1942,7 +1942,7 @@ class PlayState extends MusicBeatState
 				// TODO: maybe make a checkNoteType n shit but idfk im lazy
 				// or maybe make a "Transform Notes" event which'll make notes which don't change texture change into the specified one
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false,songNotes[4]==true, gottaHitNote ? arrowSkinbf : arrowSkindad);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, gottaHitNote ? arrowSkinbf : arrowSkindad);
 				swagNote.realNoteData = songNotes[1];
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
@@ -1994,7 +1994,7 @@ class PlayState extends MusicBeatState
 					{
 						oldNote = allNotes[Std.int(allNotes.length - 1)];
 
-						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet), daNoteData, oldNote, true, swagNote.isRoll,
+						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet), daNoteData, oldNote, true,
 						gottaHitNote ? arrowSkinbf : arrowSkindad);
 						sustainNote.mustPress = gottaHitNote;
 						sustainNote.gfNote = swagNote.gfNote;
@@ -4182,13 +4182,6 @@ class PlayState extends MusicBeatState
 
 				if (char != null && char.animTimer <= 0 && !char.voicelining){
 					char.playAnim(animToPlay, true);
-					if(!note.isRoll){
-						if(note.holdParent && !note.isSustainEnd)
-							char.holding = true;
-						else
-							char.holding = false;
-					}
-
 					char.holdTimer = 0;
 					char.callOnScripts("playNoteAnim", [animToPlay, note]);
 				}

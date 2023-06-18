@@ -83,6 +83,7 @@
 	<haxeflag name="-dce no" if="hscript"/> <!-- Disable dead code elimination so you can import unused classes on hscript -->
 	
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
+	<haxelib name="flxanimate" />
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 

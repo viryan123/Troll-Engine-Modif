@@ -47,6 +47,17 @@ class Paths
 		'content/global/music/breakfast.$SOUND_EXT'
 	];
 
+	public static function runGC()
+	{
+		#if cpp
+		cpp.vm.Gc.run(false);
+	
+		cpp.vm.Gc.compact();
+		#else
+		System.gc();
+		#end
+	}
+
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory()
 	{
