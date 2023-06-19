@@ -32,6 +32,7 @@ class OptionsSubstate extends MusicBeatSubstate
 		"gradeSet",
 		"shaders",
 		"lowQuality",
+		"gpuRender",
 		"ruin",
 		"globalAntialiasing",
 	];
@@ -322,6 +323,7 @@ class OptionsSubstate extends MusicBeatSubstate
 			[
 				"Performance",
 				[
+					"gpuRender",
 					"lowQuality",
 					"globalAntialiasing",
 					"multicoreLoading",

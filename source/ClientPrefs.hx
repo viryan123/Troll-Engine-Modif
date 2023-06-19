@@ -472,6 +472,13 @@ class ClientPrefs
 				value: false,
 				data: []
 			},
+			"gpuRender" => {
+				display: "GPU Function",
+				desc: "When toggled, Loads the sprite into the gpu if you experience issue please disable it.\n(1GB VRAM RECOMMENDED)",
+				type: Toggle,
+				value: false,
+				data: []
+			},
 			"globalAntialiasing" => {
 				display: "Antialiasing",
 				desc: "When toggled, sprites are able to be antialiased.",

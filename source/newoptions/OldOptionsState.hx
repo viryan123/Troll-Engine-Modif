@@ -281,6 +281,7 @@ class OptionsState extends MusicBeatState {
                 "Performance",
                 [
                     "lowQuality",
+                    "gpuRender",
                     "globalAntialiasing",
                     "multicoreLoading",
                     

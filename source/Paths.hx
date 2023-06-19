@@ -342,10 +342,10 @@ class Paths
 		return track(song, "Inst");
 	}
 
-	inline static public function image(key:String, ?library:String):FlxGraphic
+	inline static public function image(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
 	{
-		// streamlined the assets process more
-		var returnAsset:FlxGraphic = returnGraphic(key, library);
+		gpuRender = gpuRender != null ? gpuRender : ClientPrefs.gpuRender;
+		var returnAsset:FlxGraphic = loadImage(key, library, gpuRender);
 		return returnAsset;
 	}
 
@@ -384,30 +384,32 @@ class Paths
 		return Paths.exists(getPath(key, type));
 	}
 
-	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames
+	inline static public function getSparrowAtlas(key:String, ?library:String, ?gpuRender:Bool):FlxAtlasFrames
 	{
+		gpuRender = gpuRender != null ? gpuRender : ClientPrefs.gpuRender;
 		#if MODS_ALLOWED
 		var imageLoaded:FlxGraphic = returnGraphic(key);
 
 		return FlxAtlasFrames.fromSparrow(
-			(imageLoaded != null ? imageLoaded : image(key, library)),
+			(imageLoaded != null ? imageLoaded : image(key, library,gpuRender)),
 			(FileSystem.exists(modsXml(key)) ? File.getContent(modsXml(key)) : file('images/$key.xml', library))
 		);
 		#else
-		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
+		return FlxAtlasFrames.fromSparrow(image(key, library,gpuRender), file('images/$key.xml', library));
 		#end
 	}
 
-	inline static public function getPackerAtlas(key:String, ?library:String)
+	inline static public function getPackerAtlas(key:String, ?library:String, ?gpuRender:Bool = false)
 	{
+		gpuRender = gpuRender != null ? gpuRender : ClientPrefs.gpuRender;
 		#if MODS_ALLOWED
 		var imageLoaded:FlxGraphic = returnGraphic(key);
 		var txtExists:Bool = FileSystem.exists(modFolders('images/$key.txt'));
 		
-		return FlxAtlasFrames.fromSpriteSheetPacker((imageLoaded != null ? imageLoaded : image(key, library)),
+		return FlxAtlasFrames.fromSpriteSheetPacker((imageLoaded != null ? imageLoaded : image(key, library, gpuRender)),
 			(txtExists ? File.getContent(modFolders('images/$key.txt')) : file('images/$key.txt', library)));
 		#else
-		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
+		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library, gpuRender), file('images/$key.txt', library));
 		#end
 	}
 
@@ -430,6 +432,64 @@ class Paths
 		#elseif sys
 		return FlxGraphic.fromBitmapData(BitmapData.fromFile(path), false, path);
 		#end
+	}
+
+		// Sprite content caching with GPU based on Forever Engine texture compression.
+
+	/**
+	 * For a given key and library for an image, returns the corresponding BitmapData.
+	 		* We can probably move the cache handling here.
+	 * @param key 
+	 * @param library 
+	 * @return BitmapData
+	 */
+	 static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
+	{
+		var path:String = '';
+	
+		path = getPath('images/$key.png', IMAGE, library);
+	
+		// Debug.logTrace(path);
+		gpuRender = gpuRender != null ? gpuRender : ClientPrefs.gpuRender;
+	
+		if (Assets.exists(path, IMAGE))
+		{
+			if (!currentTrackedAssets.exists(path))
+			{
+				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
+	
+				var graphic:FlxGraphic = null;
+				if (gpuRender)
+				{
+					bitmap.lock();
+					var texture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
+					texture.uploadFromBitmapData(bitmap);
+	
+					bitmap.disposeImage();
+	
+					FlxDestroyUtil.dispose(bitmap);
+	
+					bitmap = null;
+	
+					bitmap = BitmapData.fromTexture(texture);
+	
+					bitmap.unlock();
+				}
+				graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path), false, path);
+				graphic.persist = true;
+				currentTrackedAssets.set(path, graphic);
+			}
+			else
+			{
+				// Get data from cache.
+				// Debug.logTrace('Loading existing image from cache: $key');
+			}
+			localTrackedAssets.push(path);
+			return currentTrackedAssets.get(path);
+		}
+	
+		trace('Could not find image at path $path');
+		return null;
 	}
 
 	public static function returnGraphic(key:String, ?library:String)
