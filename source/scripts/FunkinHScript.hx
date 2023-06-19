@@ -281,16 +281,11 @@ class FunkinHScript extends FunkinScript
 				var state:ChartingState = ChartingState.instance;
 				set("game", state);
 				set("global", state.variables);
-				set("getInstance", function()
-				{
-					return flixel.FlxG.state;
-				});
+				set("getInstance", flixel.FlxG.get_state);
 			}else{
 				set("game", null);
 				set("global", null);
-				set("getInstance", function(){
-					return flixel.FlxG.state;
-				});
+				set("getInstance", flixel.FlxG.get_state);
 			}
 		}
 
@@ -346,6 +341,9 @@ class FunkinHScript extends FunkinScript
 		set("ModEvent", modchart.events.ModEvent);
 		set("EaseEvent", modchart.events.EaseEvent);
 		set("SetEvent", modchart.events.SetEvent);
+		set("FlxWindowModifier",window.windowMod.FlxWindowModifier);
+		set("TransparencyFunc",window.windowMod.FlxWindowModifier.TransparencyFunc);
+		set("WindowPaths",window.windowMod.WindowPaths);
 
 		set("StageData", Stage.StageData);
 		#if VIDEOS_ALLOWED

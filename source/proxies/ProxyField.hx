@@ -31,6 +31,8 @@ class ProxyField extends FieldBase {
         // does nothing, since this uses info from its linked notefield
     }
 
+	var point = FlxPoint.get(0, 0);
+
     override function draw(){
 		if (!active || !exists || !visible || !proxiedField.exists || !proxiedField.active)
 			return; // dont draw if visible = false
@@ -72,7 +74,7 @@ class ProxyField extends FieldBase {
 					transfarm.redOffset = glowR * glow * 255;
 					transfarm.greenOffset = glowG * glow * 255;
 					transfarm.blueOffset = glowB * glow * 255;
-					transfarm.alphaMultiplier = alphas[n] * this.alpha;
+					transfarm.alphaMultiplier = alphas[n] * this.alpha * ClientPrefs.noteOpacity;
 					transforms.push(transfarm);
 				}
 
@@ -85,9 +87,13 @@ class ProxyField extends FieldBase {
 						for (shit in transforms)
 							shit.alphaMultiplier *= camera.alpha;
 
+						getScreenPosition(point, camera);
 						var drawItem = camera.startTrianglesBatch(graphic, shader.bitmap.filter == 4, true, null, true, shader);
 
-						drawItem.addTrianglesColorArray(vertices, indices, uvData, null, FlxPoint.weak(x, y), null, transforms);
+						@:privateAccess
+						{
+							drawItem.addTrianglesColorArray(vertices, indices, uvData, null, point, camera._bounds, transforms);
+						}
 						for (n in 0...transforms.length)
 							transforms[n].alphaMultiplier = alphas[n];
 					}

@@ -95,6 +95,9 @@ class FunkinScript {
 
 		set('inGameOver', false);
 		
+		set("FlxWindowModifier",window.windowMod.FlxWindowModifier);
+		set("TransparencyFunc",window.windowMod.FlxWindowModifier.TransparencyFunc);
+		set("WindowPaths",window.windowMod.WindowPaths);
 		set('downscroll', ClientPrefs.downScroll);
 		set('middlescroll', ClientPrefs.midScroll);
 		set('framerate', ClientPrefs.framerate);

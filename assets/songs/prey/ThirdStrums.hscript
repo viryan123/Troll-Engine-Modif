@@ -26,7 +26,7 @@ function preModifierRegister(){
 	gfField.noteHitCallback = game.opponentHitCallback;
 	gfField.fadeIn(true);
 
-	gfField.cameras = [game.camHUD];
+	//gfField.cameras = [game.camHUD];
 }
 
 function postModifierRegister(){
@@ -35,41 +35,9 @@ function postModifierRegister(){
 		strum.alpha = 0;
 	}
 	gfField.modNumber = 2;
-}
-
-function onCountdownStarted()
-{
-	game.modManager.queueEase(1588,1616,"transformX", 100,'quadinout', 0);
-	for (idx in 0...3)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', 15,'quadinout', 0);
-	}
-
-	for (idx in 0...2)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', 30,'quadinout', 0);
-	}
-
-	for (idx in 0...1)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', 37,'quadinout', 0);
-	}
-
-	game.modManager.queueEase(1588,1616,"transformX", -100,'quadinout', 1);
-	for (idx in 0...3)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', -15,'quadinout', 1);
-	}
-
-	for (idx in 0...2)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', -30,'quadinout', 1);
-	}
-
-	for (idx in 0...1)
-	{
-		game.modManager.queueEase(1588,1616,'transform' + idx + 'X', -37,'quadinout', 1);
-	}
+	modManager.setValue("reverse", 1, 2);
+	modManager.setValue("transformX-a", 50, 2);
+	modManager.setValue("stealth", 0.7, 2);
 }
 
 function onEvent(name, value1, value2)
@@ -81,9 +49,15 @@ function onEvent(name, value1, value2)
     {
         case "ThirdStrums":
         	gfField.fadeIn(false);
-            // opponent mode
 			gfField.autoPlayed = oppField.autoPlayed || botPlay;
 			gfField.isPlayer = oppField.isPlayer;
 			gfField.noteHitCallback = oppField.noteHitCallback;
     }
+}
+
+function onStepHit()
+{
+	switch (curStep)
+	{
+	}
 }

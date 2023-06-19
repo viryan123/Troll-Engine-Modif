@@ -220,7 +220,7 @@ class Note extends NoteObject
 		multSpeed = value;
 		// trace('fuck cock');
 		return value; */
-		return value;
+		return multSpeed = value;
 	}
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit

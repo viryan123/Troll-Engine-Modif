@@ -1,6 +1,6 @@
 package;
 
-import hxcodec.VideoSprite;
+import window.windowMod.FlxWindowModifier;
 import lime.media.openal.ALFilter;
 import lime.media.openal.ALEffect;
 import lime.media.openal.AL;
@@ -68,6 +68,7 @@ import Discord.DiscordClient;
 #end
 #if VIDEOS_ALLOWED
 import hxcodec.VideoHandler;
+import hxcodec.VideoSprite;
 #end
 
 typedef SongCreditdata = // beacuse SongMetadata is stolen
@@ -996,14 +997,6 @@ class PlayState extends MusicBeatState
 		grpNoteSplashes.cameras = cH;
 		notes.cameras = cH;
 		botplayTxt.cameras = cH;
-/* 		healthBarBG.cameras = cH;
-		healthBar.cameras = cH;
-		iconP1.cameras = cH;
-		iconP2.cameras = cH; */
-/* 
-		timeBar.cameras = cH;
-		timeBarBG.cameras = cH;
-		timeTxt.cameras = cH; */
 
 		// EVENT AND NOTE SCRIPTS WILL GET LOADED HERE
 		generateSong(SONG.song);
@@ -1291,16 +1284,11 @@ class PlayState extends MusicBeatState
 
 			videoSprite = new VideoSprite();
 			videoSprite.cameras = [camVideo];
-			videoSprite.canvasWidth = Std.int(appliedWidth);
-			videoSprite.canvasHeight = Std.int(appliedHeight);
-			videoSprite.bitmap.canSkip = false;
+			videoSprite.setGraphicSize(Std.int(appliedWidth), Std.int(appliedHeight));
+			videoSprite.updateHitbox();
+			//videoSprite.bitmap.isSeekable = false;
 			add(videoSprite);
-			videoSprite.playVideo(filepath, true, pauseMusic);
-			videoSprite.finishCallback = function()
-			{
-				remove(videoSprite);
-				return;
-			}
+			videoSprite.playVideo(filepath, true,pauseMusic);
 		}
 		else
 			return;
@@ -3638,12 +3626,12 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function applyJudgmentData(judgeData:JudgmentData, diff:Float, ?show:Bool = true){
+	private function applyJudgmentData(judgeData:JudgmentData, diff:Float, ?bot:Bool = false, ?show:Bool = true){
 		if(judgeData==null){
 			trace("you didnt give a valid JudgmentData to applyJudgmentData!");
 			return;
 		}
-		if (!cpuControlled)songScore += Math.floor(judgeData.score * playbackRate);
+		if (!bot)songScore += Math.floor(judgeData.score * playbackRate);
 		health += (judgeData.health * 0.02) * (judgeData.health < 0 ? healthLoss : healthGain);
 		songHits++;
 
@@ -3687,7 +3675,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function applyNoteJudgment(note:Note):Null<JudgmentData>
+	private function applyNoteJudgment(note:Note, bot:Bool = false):Null<JudgmentData>
 	{
 		if(note.hitResult.judgment == UNJUDGED)return null;
 		var judgeData:JudgmentData = judgeManager.judgmentData.get(note.hitResult.judgment);
@@ -3700,7 +3688,7 @@ class PlayState extends MusicBeatState
 		if(mutatedJudgeData != null && mutatedJudgeData != Globals.Function_Continue)
 			judgeData = cast mutatedJudgeData; // so you can return your own custom judgements or w/e
 
-		applyJudgmentData(judgeData, note.hitResult.hitDiff, true);
+		applyJudgmentData(judgeData, note.hitResult.hitDiff, bot, true);
 
 		callOnHScripts("postApplyJudgment", [note, judgeData]);
 		
@@ -3717,7 +3705,7 @@ class PlayState extends MusicBeatState
 			field = getFieldFromNote(note);
 
 		var hitTime = note.hitResult.hitDiff + ClientPrefs.ratingOffset;
-		var judgeData:JudgmentData = applyNoteJudgment(note);
+		var judgeData:JudgmentData = applyNoteJudgment(note, field.autoPlayed);
 		if(judgeData==null)return;
 
 		note.ratingMod = judgeData.accuracy * 0.01;
