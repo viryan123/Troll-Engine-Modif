@@ -44,6 +44,7 @@ class Note extends NoteObject
 	public var bAngle:Float = 0;
 	
 	public var noteScript:FunkinScript;
+	public var skinScript:FunkinScript;
 
 
 	public static var quants:Array<Int> = [
@@ -277,6 +278,12 @@ class Note extends NoteObject
 		{
 			var noteScript:FunkinHScript = cast noteScript;
 			noteScript.executeFunc("onUpdateColours", [this], this);
+		}
+
+		if (skinScript != null && skinScript.scriptType == 'hscript')
+		{
+			var skinScript:FunkinHScript = cast skinScript;
+			skinScript.executeFunc("onUpdateColours", [this], this);
 		}
 	}
 
@@ -542,19 +549,22 @@ class Note extends NoteObject
 				antialiasing = false;
 				useRGBColors = false;
 				pixelNote = true;
-			case 'tenzus':
-				frames = Paths.getSparrowAtlas('noteSkin/tenzus_notes');
-				loadNoteAnims();
-
-				pixelNote = false;
-				useRGBColors = false;
-				antialiasing = ClientPrefs.globalAntialiasing;
 			default:
 				frames = Paths.getSparrowAtlas('noteSkin/QUANTNOTE_assets');
 				loadNoteAnims();
 
 				pixelNote = false;
 				antialiasing = ClientPrefs.globalAntialiasing;
+		}
+
+		if (!inEditor && PlayState.instance != null)
+			skinScript = PlayState.instance.noteskinScripts.get(style);
+		else if(inEditor && ChartingState.instance!=null)
+			skinScript = ChartingState.instance.noteskinScripts.get(style);
+
+		if (skinScript != null && skinScript.scriptType == 'hscript'){
+			var skinScript:FunkinHScript = cast skinScript;
+			skinScript.executeFunc("ReloadNoteSkin", [this], this);
 		}
 
 		addCustomNote(type);
@@ -666,6 +676,11 @@ class Note extends NoteObject
 			if (noteScript != null && noteScript.scriptType == 'hscript'){
 				var noteScript:FunkinHScript = cast noteScript;
 				noteScript.executeFunc("noteUpdate", [elapsed], this);
+			}
+
+			if (skinScript != null && skinScript.scriptType == 'hscript'){
+				var skinScript:FunkinHScript = cast skinScript;
+				skinScript.executeFunc("noteUpdate", [elapsed], this);
 			}
 		}
 		

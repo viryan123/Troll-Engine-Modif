@@ -1,5 +1,7 @@
 package;
 
+import scripts.FunkinScript;
+import scripts.FunkinHScript;
 import flixel.util.FlxColor;
 import shaders.AmongUsColorSwapShader;
 #if !macro
@@ -23,6 +25,7 @@ class StrumNote extends NoteObject
 
 	public var daStyle = 'style';
 	public var pixelNotes:Array<String> = ['pixel'];
+	public var skinScript:FunkinScript;
 	
 	override function destroy()
 	{
@@ -141,14 +144,17 @@ class StrumNote extends NoteObject
 						animation.add('pressed', [7, 11], 12, false);
 						animation.add('confirm', [15, 19], 24, false);
 				}
-			case 'tenzus':
-				frames = Paths.getSparrowAtlas('noteSkin/tenzus_notes');
-				_loadStrumAnims();
-
-				useRGBColors = false;
 			default:
 				frames = Paths.getSparrowAtlas('noteSkin/QUANTNOTE_assets');
-				_loadStrumAnims();
+				loadStrumAnims();
+		}
+
+		if (PlayState.instance != null)
+			skinScript = PlayState.instance.noteskinScripts.get(texture);
+
+		if (skinScript != null && skinScript.scriptType == 'hscript'){
+			var skinScript:FunkinHScript = cast skinScript;
+			skinScript.executeFunc("ReloadStrumsSkin", [this], this);
 		}
 		
 		defScale.copyFrom(scale);
@@ -160,18 +166,18 @@ class StrumNote extends NoteObject
 		}
 	}
 
-	/*public function loadNoteAnims() {
-		if (noteScript != null && noteScript.scriptType == 'hscript'){
-			var noteScript:FunkinHScript = cast noteScript;
-			if (noteScript.exists("loadNoteAnims") && Reflect.isFunction(noteScript.get("loadNoteAnims"))){
-				noteScript.executeFunc("loadNoteAnims", [this], this, ["super" => _loadNoteAnims]);
+	public function loadStrumAnims() {
+		if (skinScript != null && skinScript.scriptType == 'hscript'){
+			var skinScript:FunkinHScript = cast skinScript;
+			if (skinScript.exists("loadStrumAnims") && Reflect.isFunction(skinScript.get("loadStrumAnims"))){
+				skinScript.executeFunc("loadStrumAnims", [this], this, ["super" => _loadStrumAnims]);
 				return;
 			}
 		}
-		_loadNoteAnims();
-	}*/
+		_loadStrumAnims();
+	}
 
-	function _loadStrumAnims() {
+	public function _loadStrumAnims() {
 		switch (texture)
 		{
 			default:

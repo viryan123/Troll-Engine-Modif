@@ -437,6 +437,7 @@ class PlayState extends MusicBeatState
 
 	public var gameFont:String = 'Bold Normal Text.ttf';
 
+	public var noteskinScripts:Map<String, FunkinScript> = []; // custom noteskins for scriptVer '1'
 	public var notetypeScripts:Map<String, FunkinScript> = []; // custom notetypes for scriptVer '1'
 	public var eventScripts:Map<String, FunkinScript> = []; // custom events for scriptVer '1'
 
@@ -1066,6 +1067,8 @@ class PlayState extends MusicBeatState
 
 		noteTypeMap.clear();
 		noteTypeMap = null;
+		noteSkinMap.clear();
+		noteSkinMap = null;
 		eventPushedMap.clear();
 		eventPushedMap = null;
 
@@ -1626,6 +1629,7 @@ class PlayState extends MusicBeatState
 
 	var debugNum:Int = 0;
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
+	private var noteSkinMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 
 	function shouldPush(event:EventNote){
@@ -1762,6 +1766,66 @@ class PlayState extends MusicBeatState
 
 		var playerCounter:Int = 0;
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+
+		for (section in noteData)
+		{
+			for (songNotes in section.sectionNotes)
+			{
+				var type:Dynamic = section.mustHitSection ? arrowSkinbf : arrowSkindad;
+
+				if (!noteSkinMap.exists(type)) {
+					noteSkinMap.set(type, true);
+				}
+			}
+		}
+
+		for (noteskins in noteSkinMap.keys())
+		{
+			var doPush:Bool = false;
+			#if PE_MOD_COMPATIBILITY
+			var fuck = ["noteskins","custom_noteskins"];
+			for(file in fuck){
+				var baseScriptFile:String = '$file/$noteskins';
+			#else
+				var baseScriptFile:String = 'noteskins/$noteskins';
+			#end
+				var exts = ["hscript" #if LUA_ALLOWED , "lua" #end];
+				for (ext in exts)
+				{
+					if (doPush)
+						break;
+					var baseFile = '$baseScriptFile.$ext';
+					var files = [#if MODS_ALLOWED Paths.modFolders(baseFile), #end Paths.getPreloadPath(baseFile)];
+					for (file in files)
+					{
+						if (!Paths.exists(file))
+							continue;
+	
+						#if LUA_ALLOWED
+						if (ext == 'lua')
+						{
+							var script = new FunkinLua(file, noteskins, #if(PE_MOD_COMPATIBILITY) true #else false #end);
+							luaArray.push(script);
+							funkyScripts.push(script);
+							noteskinScripts.set(noteskins, script);
+							doPush = true;
+						}
+						else #end if (ext == 'hscript')
+						{
+							var script = FunkinHScript.fromFile(file, noteskins);
+							hscriptArray.push(script);
+							funkyScripts.push(script);
+							noteskinScripts.set(noteskins, script);
+							doPush = true;
+						}
+						if (doPush)
+							break;
+					}
+				}
+			#if PE_MOD_COMPATIBILITY
+			}
+			#end
+		}
 
 		// loads note types
 		for (section in noteData)
@@ -2066,6 +2130,14 @@ class PlayState extends MusicBeatState
 
 		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
 		for(key => script in notetypeScripts){
+			if(script.scriptType == 'lua')
+				script.call("onCreate");
+			
+		}
+		#end
+
+		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
+		for(key => script in noteskinScripts){
 			if(script.scriptType == 'lua')
 				script.call("onCreate");
 			
@@ -2557,6 +2629,12 @@ class PlayState extends MusicBeatState
 		#end
 
 		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
+		for (key => script in noteskinScripts){
+			if(script.scriptType=='lua')script.call("onUpdate", [elapsed]); // for backwards compat w/ psych lua
+		}
+		#end
+
+		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
 		for (key => script in eventScripts){
 			if(script.scriptType=='lua')script.call("onUpdate", [elapsed]); // for backwards compat w/ psych lua
 		}
@@ -2603,6 +2681,10 @@ class PlayState extends MusicBeatState
 		}
 
 		for (key => script in notetypeScripts){
+			script.call("update", [elapsed]);
+		}
+
+		for (key => script in noteskinScripts){
 			script.call("update", [elapsed]);
 		}
 
@@ -2774,6 +2856,12 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdatePost', [elapsed]);
 		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
 		for (key => script in notetypeScripts){
+			if(script.scriptType=='lua')script.call("onUpdatePost", [elapsed]); // for backwards compat w/ psych lua
+		}
+		#end
+
+		#if(LUA_ALLOWED && PE_MOD_COMPATIBILITY)
+		for (key => script in noteskinScripts){
 			if(script.scriptType=='lua')script.call("onUpdatePost", [elapsed]); // for backwards compat w/ psych lua
 		}
 		#end
@@ -4462,6 +4550,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		notetypeScripts.clear();
+		noteskinScripts.clear();
 		eventScripts.clear();
 		if(!ClientPrefs.controllerMode)
 		{
@@ -4614,7 +4703,7 @@ class PlayState extends MusicBeatState
 		{
 			if (exclusions.contains(script.scriptName)
 				|| ignoreSpecialShit
-				&& (notetypeScripts.exists(script.scriptName) || eventScripts.exists(script.scriptName) ) )
+				&& (notetypeScripts.exists(script.scriptName) || eventScripts.exists(script.scriptName) || noteskinScripts.exists(script.scriptName)) )
 			{
 				continue;
 			}

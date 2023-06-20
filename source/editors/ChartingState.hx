@@ -64,11 +64,11 @@ class ChartingState extends MusicBeatState
 		'No Animation'
 	];
 
+	public var noteskinScripts:Map<String, FunkinScript> = [];
 	public static var noteStyleList:Array<String> = 
 	[
 		'',
-		'pixel',
-		'tenzus'
+		'pixel'
 	];
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
@@ -982,6 +982,56 @@ class ChartingState extends MusicBeatState
 			displayNameList2.push(noteStyleList[key2]);
 			key2++;
 		}
+
+		#if (sys && (hscript || LUA_ALLOWED))
+		var charsLoaded:Map<String, Bool> = new Map();
+		var notesList = [];
+		var directories:Array<String> = [
+			#if MODS_ALLOWED
+			Paths.mods(Paths.currentModDirectory + '/noteskins/'),
+			Paths.mods('global/noteskins/'),
+			Paths.mods('noteskins/'),
+			#end
+			Paths.getPreloadPath('noteskins/')
+		];
+		var allowedFormats = [
+			#if hscript
+			'.hscript',
+			#end
+			#if LUA_ALLOWED
+			'.lua'
+			#end
+		];
+		for (directory in directories)
+		{
+			if (!FileSystem.exists(directory))
+				continue;
+
+			for (file in FileSystem.readDirectory(directory))
+			{
+				var path = haxe.io.Path.join([directory, file]);
+				if (FileSystem.isDirectory(path))
+					continue;
+
+				var fileFormat:Null<String> = null;
+				for (format in allowedFormats){ // check file format
+					if (path.endsWith(format)){ // if its a supported format
+						fileFormat = format;
+						break;
+					}
+				}
+				if (fileFormat == null) // if its not supported
+					continue;
+
+				var fileToCheck:String = file.substr(0, file.length - fileFormat.length); // get file name
+				if (noteTypeMap.exists(fileToCheck)) // if it already is on the list
+					continue;
+
+				displayNameList2.push(fileToCheck);
+				key2++;	
+			}
+		}
+		#end
 
 		noteSkinInputTextbf = new FlxUIDropDownMenuCustom(noteTypeDropDown.x, noteTypeDropDown.y + 45, FlxUIDropDownMenuCustom.makeStrIdLabelArray(displayNameList2, true), function(character:String)
 		{
