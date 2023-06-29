@@ -2,6 +2,8 @@
 
 Troll Engine Modification is the modification of [Troll Engine](https://github.com/riconuts/troll-engine) that's used on the [Tails Gets Trolled mod](https://gamebanana.com/mods/320596).
 
+## THIS MODIFICATION IS DEAD! PLEASE USE THIS https://github.com/viryan123/Troll-Engine-New
+
 ## Installation:
 You must have [the most up-to-date version of Haxe](https://haxe.org/download/).
 
